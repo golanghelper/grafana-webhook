@@ -27,7 +27,7 @@ func TestHandleWebhook(t *testing.T) {
 		r, e := http.NewRequest(http.MethodPost, "/test", bytes.NewBuffer(fd))
 		fatalIfError(e, t)
 
-		// run habdler
+		// run handler
 		w := httptest.NewRecorder()
 		h(w, r)
 	})
