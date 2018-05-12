@@ -1,9 +1,9 @@
 package grafana_webhook
 
 import (
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
 )
 
 // HandleWebhook returns a http handler function

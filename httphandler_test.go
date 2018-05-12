@@ -1,11 +1,11 @@
 package grafana_webhook
 
 import (
-	"testing"
-	"net/http"
-	"io/ioutil"
 	"bytes"
+	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
+	"testing"
 )
 
 // TestHandleWebhook tests Handler function -
