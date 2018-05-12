@@ -17,7 +17,7 @@ handler.HandleFunc("/sms", HandleWebhook(func(w http.ResponseWriter, b *Body) {
     msg := fmt.Sprintf("Grafana status: %s\n%s", b.Title, b.Message)
     sendMessage(msg)
 
-}))
+}, 0))
 
 go http.ListenAndServe(addr, handler)
 log.Println(fmt.Sprintf("API is listening on: %s", addr))
