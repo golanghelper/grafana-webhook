@@ -1,9 +1,9 @@
 package grafana_webhook
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
+	"io/ioutil"
+	"encoding/json"
 )
 
 // HandleWebhook returns a http handler function
@@ -15,12 +15,20 @@ func HandleWebhook(h HandlerFunc) http.HandlerFunc {
 		var b *Body
 
 		// parse POST/ PUT values to the Grafana Body model
-		reqData, _ := ioutil.ReadAll(r.Body)
-		json.Unmarshal(reqData, &b)
-
-		// run Grafana HandlerFunc
-		if h != nil {
-			h(w, b)
+		if r.Method == http.MethodPost || r.Method == http.MethodPut {
+			// request limit: @TODO - make it configurable, the limit depends on the matches amount...
+			r.Body = http.MaxBytesReader(w, r.Body, 8192)
+			reqData, e := ioutil.ReadAll(r.Body)
+			if e != nil {
+				// read body action has failed
+				b = BodyOnReadAllSizeLimitErr()
+			} else {
+				json.Unmarshal(reqData, &b)
+			}
+			// run Grafana HandlerFunc
+			if h != nil {
+				h(w, b)
+			}
 		}
 	}
 }
