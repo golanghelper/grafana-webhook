@@ -7,8 +7,9 @@ import (
 )
 
 // HandleWebhook returns a http handler function
-// 'h' HandlerFunc parameter is called after request successfully unmarshaled to the Body pointer
-func HandleWebhook(h HandlerFunc) http.HandlerFunc {
+// h - HandlerFunc parameter is called after request successfully unmarshaled to the Body pointer
+// bodyLimit - specifies a body size limit for the request, set 0 to unlimited
+func HandleWebhook(h HandlerFunc, bodyLimit int64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Grafana request body
@@ -16,8 +17,10 @@ func HandleWebhook(h HandlerFunc) http.HandlerFunc {
 
 		// parse POST/ PUT values to the Grafana Body model
 		if r.Method == http.MethodPost || r.Method == http.MethodPut {
-			// request limit: @TODO - make it configurable, the limit depends on the matches amount...
-			r.Body = http.MaxBytesReader(w, r.Body, 8192)
+			if bodyLimit > 0 {
+				// set request body limit
+				r.Body = http.MaxBytesReader(w, r.Body, bodyLimit)
+			}
 			reqData, e := ioutil.ReadAll(r.Body)
 			if e != nil {
 				// read body action has failed

@@ -22,7 +22,7 @@ type Body struct {
 	EvalMatches []map[string]interface{} `json:"evalMatches"`
 }
 
-// BodyOnReadAllSizeLimitErr creates a default instance on case of a request size limit error
+// BodyOnReadAllSizeLimitErr creates a default instance in case of a request size limit error
 func BodyOnReadAllSizeLimitErr() *Body {
 	return &Body{
 		Title: "undefined",
